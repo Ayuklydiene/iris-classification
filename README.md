@@ -1,32 +1,42 @@
-# Iris Flower Classification & Evaluation Metrics
+# Iris Flower Classification & Model Evaluation
 
-An interactive, responsive web application and machine learning benchmark created for the classification of Fisher's classic **Iris Dataset** and comprehensive evaluation of model performance.
+A web application and machine learning benchmark for classifying Iris flower species and calculating standard classification evaluation metrics.
+
+---
+
+## 📌 Project Overview
+
+This project implements a classification model using the Iris dataset (150 samples across 3 species: *Setosa*, *Versicolor*, and *Virginica*). 
+
+The dataset is partitioned into an **80% training set (120 samples)** and a **20% test set (30 samples)** using stratified sampling. The model is evaluated on unseen test data using standard classification metrics: **Accuracy, Precision, Recall, F1-Score, and a Confusion Matrix**.
 
 ---
 
 ## 📊 Evaluation Metrics Benchmark
 
-Trained with stratified 80% train / 20% test partition:
+### Overall Model Performance
 
-| Metric | Score | Note |
-| :--- | :--- | :--- |
-| **Overall Accuracy** | **96.67%** | 29 out of 30 test samples correctly classified |
-| **Macro Precision** | **0.9630** | Unweighted mean across all 3 classes |
-| **Macro Recall** | **0.9697** | Unweighted sensitivity across all 3 classes |
-| **Macro F1-Score** | **0.9645** | Harmonic mean of precision & recall |
-| **Weighted Precision**| **0.9704** | Weighted by class support |
-| **Weighted Recall** | **0.9667** | Weighted by class support |
-| **Weighted F1-Score** | **0.9669** | Weighted by class support |
+| Metric | Score | Details |
+| :--- | :---: | :--- |
+| **Accuracy** | **96.67%** | 29 out of 30 test samples correctly classified |
+| **Macro Precision** | **0.9630** | Unweighted average precision across all 3 classes |
+| **Macro Recall** | **0.9697** | Unweighted average sensitivity across all 3 classes |
+| **Macro F1-Score** | **0.9645** | Harmonic mean of precision and recall |
+| **Weighted Precision** | **0.9704** | Precision weighted by class support |
+| **Weighted Recall** | **0.9667** | Recall weighted by class support |
+| **Weighted F1-Score** | **0.9669** | F1-score weighted by class support |
 
-### Detailed Classification Report (Per Species)
+### Per-Class Classification Report
 
 | Species | Precision | Recall | F1-Score | Support |
 | :--- | :---: | :---: | :---: | :---: |
-| **Iris-Setosa** | 1.0000 | 1.0000 | 1.0000 | 11 |
-| **Iris-Versicolor** | 1.0000 | 0.9091 | 0.9524 | 11 |
-| **Iris-Virginica** | 0.8889 | 1.0000 | 0.9412 | 8 |
+| **Iris setosa** | 1.0000 | 1.0000 | 1.0000 | 11 |
+| **Iris versicolor** | 1.0000 | 0.9091 | 0.9524 | 11 |
+| **Iris virginica** | 0.8889 | 1.0000 | 0.9412 | 8 |
+| **Total / Accuracy** | — | — | **0.9667** | **30** |
 
-### Multiclass Confusion Matrix
+### Confusion Matrix
+
 ```
                   Predicted ->
 Actual Class      Setosa    Versicolor   Virginica
@@ -36,36 +46,39 @@ Versicolor           0          10           1
 Virginica            0           0           8
 ```
 
+* **Setosa**: 100% precision and recall (linearly separable).
+* **Versicolor**: 10 correct, 1 sample classified as Virginica due to overlapping petal dimensions.
+* **Virginica**: 8 correct, 1 false positive from Versicolor.
+
 ---
 
-## 🌟 Web Application Features
+## 💻 Web Application Features
 
-1. **Executive Evaluation Dashboard**:
-   - Interactive Confusion Matrix with true positive and misclassification indicators.
-   - Live Classification Report table with precision, recall, f1-score, and support counts.
-   - Visual comparison charts for all classes.
+1. **Evaluation Metrics**:
+   * Summary cards showing Overall Accuracy, Macro Precision, Macro Recall, and Macro F1-Score.
+   * Full multiclass Confusion Matrix and Classification Report table.
 
-2. **Interactive Classification Playground**:
-   - 4 sliders for Sepal Length, Sepal Width, Petal Length, and Petal Width.
-   - Preset buttons to quickly test typical samples of Setosa, Versicolor, and Virginica.
-   - Real-time confidence probability breakdown bars.
-   - Nearest training neighbors inspection with Euclidean distance metrics.
+2. **Classify a Sample (Interactive Predictor)**:
+   * Sliders for all 4 features: **Sepal Length, Sepal Width, Petal Length, and Petal Width**.
+   * Instant prediction displaying species name and confidence percentages.
+   * Nearest training neighbors and their Euclidean distance values.
+   * Quick preset buttons for typical sample measurements.
 
 3. **Dataset Explorer**:
-   - Searchable, filterable table showing all 150 ground-truth samples.
+   * Filterable table showing all 150 instances of the Iris dataset.
 
-4. **Methodology & Formula Reference**:
-   - Mathematical definitions for Accuracy, Precision, Recall, and F1-score for supervisor review.
+4. **Overview & Evaluation Formulas**:
+   * Mathematical formulations for Accuracy, Precision, Recall, and F1-Score.
 
 ---
 
 ## 🚀 How to Run Locally
 
-### Option 1: Double-Click or Open in Any Browser (Zero Setup)
-Simply double-click `index.html` or right-click and choose **Open with Browser**. The entire classifier and dashboard will run immediately with client-side inference!
+### Method 1: Direct in Browser (No Setup Required)
+Double-click `index.html` or open it directly in Chrome, Edge, or Firefox.
 
-### Option 2: Run with Python Server
-In PowerShell or Terminal:
+### Method 2: With Python Server
+Run the lightweight server included in the project:
 ```bash
 python server.py
 ```
@@ -73,37 +86,14 @@ Then navigate to:
 ```
 http://localhost:8000
 ```
-*(The Python server requires zero external pip packages and uses the standard library HTTP server).*
 
 ---
 
-## 🌐 How to Host Online (Free & Instant)
+## 🌐 Deploy to Vercel
 
-### Method A: GitHub Pages (Recommended for Academic Submissions)
-1. Initialize a git repository and push this directory to your GitHub account:
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit - Iris Classification WebApp"
-   git branch -M main
-   git remote add origin https://github.com/<your-username>/<your-repo-name>.git
-   git push -u origin main
-   ```
-2. In your GitHub repository:
-   - Click **Settings** > **Pages** (on the left menu).
-   - Under **Build and deployment**, set **Source** to `Deploy from a branch`.
-   - Select Branch: `main` / `/(root)` and click **Save**.
-3. In ~60 seconds, your site will be live at:
-   `https://<your-username>.github.io/<your-repo-name>/`
-
-### Method B: Netlify (Drag & Drop in 10 Seconds)
-1. Go to [Netlify Drop](https://app.netlify.com/drop).
-2. Drag and drop this folder (`iris-classification`) directly onto the page.
-3. Netlify will deploy it instantly and give you a public URL (e.g. `https://iris-classifier-assignment.netlify.app`).
-
-### Method C: Vercel
-1. Install Vercel CLI (`npm i -g vercel`) or import the GitHub repo on [vercel.com](https://vercel.com).
-2. Click **Deploy**.
+1. Push this repository to GitHub.
+2. Go to [vercel.com](https://vercel.com) and import the repository.
+3. Keep the default settings and click **Deploy**.
 
 ---
 
@@ -111,10 +101,11 @@ http://localhost:8000
 
 ```
 iris-classification/
-├── index.html                  # Main responsive webapp dashboard & interactive predictor
-├── server.py                   # Python HTTP backend server with REST API endpoints
-├── iris_classifier_sklearn.py  # Standard scikit-learn implementation
-├── iris_classifier_pure.py     # Standalone pure-Python implementation
-├── requirements.txt            # Python dependencies (scikit-learn, numpy, pandas, matplotlib)
-└── README.md                   # Project documentation, metrics report, and hosting guide
+├── index.html                  # Web application (dashboard & interactive classifier)
+├── server.py                   # Python HTTP backend server with REST API
+├── iris_classifier_sklearn.py  # scikit-learn training & metrics script
+├── iris_classifier_pure.py     # Standalone Python classifier & metrics script
+├── requirements.txt            # Python dependencies
+├── vercel.json                 # Vercel deployment configuration
+└── README.md                   # Project documentation & metrics benchmark
 ```
