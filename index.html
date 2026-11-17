@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iris Flower Classification</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    table, th, td {
+      border-collapse: collapse;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-200">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+      <div>
+        <h1 class="text-xl font-bold text-gray-900">Iris Flower Classification</h1>
+        <p class="text-sm text-gray-500">Machine learning classification and evaluation on the Iris dataset</p>
+      </div>
+      <div class="text-sm text-gray-600 bg-gray-100 px-3 py-1.5 rounded border border-gray-200 self-start sm:self-auto">
+        Accuracy: <span class="font-semibold text-gray-900">96.7%</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <div class="bg-white border-b border-gray-200">
+    <div class="max-w-5xl mx-auto px-4 flex space-x-6">
+      <button onclick="switchTab('metrics')" id="tab-btn-metrics" class="tab-btn py-3 text-sm font-medium border-b-2 border-blue-600 text-blue-600">
+        Evaluation Metrics
+      </button>
+      <button onclick="switchTab('predict')" id="tab-btn-predict" class="tab-btn py-3 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700">
+        Classify a Sample
+      </button>
+      <button onclick="switchTab('dataset')" id="tab-btn-dataset" class="tab-btn py-3 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700">
+        Dataset
+      </button>
+      <button onclick="switchTab('about')" id="tab-btn-about" class="tab-btn py-3 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700">
+        Notes &amp; Formulas
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content Container -->
+  <main class="max-w-5xl w-full mx-auto px-4 py-6 flex-1 space-y-6">
+
+    <!-- TAB 1: EVALUATION METRICS -->
+    <section id="tab-metrics" class="tab-pane space-y-6">
+      
+      <!-- Summary Box -->
+      <div class="bg-white p-4 rounded-lg border border-gray-200">
+        <h2 class="text-base font-semibold text-gray-900 mb-1">Model Summary</h2>
+        <p class="text-sm text-gray-600">
+          Classifier: <strong>k-Nearest Neighbors (k=5, Euclidean distance)</strong> &bull; 
+          Split: <strong>80% Train (120 samples) / 20% Test (30 samples)</strong> &bull; 
+          Random state: <strong>42</strong>
+        </p>
+      </div>
+
+      <!-- Key Metrics Row -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="bg-white p-4 rounded-lg border border-gray-200">
+          <div class="text-xs text-gray-500 uppercase tracking-wide">Accuracy</div>
+          <div class="text-2xl font-bold text-gray-900 mt-1">96.67%</div>
+          <div class="text-xs text-gray-500 mt-0.5">29 / 30 correct</div>
+        </div>
+        <div class="bg-white p-4 rounded-lg border border-gray-200">
+          <div class="text-xs text-gray-500 uppercase tracking-wide">Macro Precision</div>
+          <div class="text-2xl font-bold text-gray-900 mt-1">0.9630</div>
+          <div class="text-xs text-gray-500 mt-0.5">Unweighted avg</div>
+        </div>
+        <div class="bg-white p-4 rounded-lg border border-gray-200">
+          <div class="text-xs text-gray-500 uppercase tracking-wide">Macro Recall</div>
+          <div class="text-2xl font-bold text-gray-900 mt-1">0.9697</div>
+          <div class="text-xs text-gray-500 mt-0.5">Unweighted avg</div>
+        </div>
+        <div class="bg-white p-4 rounded-lg border border-gray-200">
+          <div class="text-xs text-gray-500 uppercase tracking-wide">Macro F1-Score</div>
+          <div class="text-2xl font-bold text-gray-900 mt-1">0.9645</div>
+          <div class="text-xs text-gray-500 mt-0.5">Harmonic mean</div>
+        </div>
+      </div>
+
+      <!-- Confusion Matrix & Classification Report Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- Confusion Matrix -->
+        <div class="bg-white p-5 rounded-lg border border-gray-200">
+          <h3 class="text-sm font-semibold text-gray-900 mb-1">Confusion Matrix</h3>
+          <p class="text-xs text-gray-500 mb-4">Rows represent actual species; columns represent predicted species.</p>
+          
+          <table class="w-full text-center text-sm border border-gray-200">
+            <thead>
+              <tr class="bg-gray-50 text-gray-600 text-xs border-b border-gray-200">
+                <th class="p-2 text-left font-medium">Actual \ Predicted</th>
+                <th class="p-2 font-medium">Setosa</th>
+                <th class="p-2 font-medium">Versicolor</th>
+                <th class="p-2 font-medium">Virginica</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 text-sm">
+              <tr>
+                <td class="p-2.5 text-left font-medium text-gray-700 bg-gray-50">Setosa</td>
+                <td class="p-2.5 bg-blue-50 text-blue-900 font-semibold">11</td>
+                <td class="p-2.5 text-gray-400">0</td>
+                <td class="p-2.5 text-gray-400">0</td>
+              </tr>
+              <tr>
+                <td class="p-2.5 text-left font-medium text-gray-700 bg-gray-50">Versicolor</td>
+                <td class="p-2.5 text-gray-400">0</td>
+                <td class="p-2.5 bg-blue-50 text-blue-900 font-semibold">10</td>
+                <td class="p-2.5 bg-red-50 text-red-700 font-semibold">1</td>
+              </tr>
+              <tr>
+                <td class="p-2.5 text-left font-medium text-gray-700 bg-gray-50">Virginica</td>
+                <td class="p-2.5 text-gray-400">0</td>
+                <td class="p-2.5 text-gray-400">0</td>
+                <td class="p-2.5 bg-blue-50 text-blue-900 font-semibold">8</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p class="text-xs text-gray-500 mt-3">
+            Note: 1 sample of Versicolor was predicted as Virginica due to overlapping petal measurements.
+          </p>
+        </div>
+
+        <!-- Classification Report Table -->
+        <div class="bg-white p-5 rounded-lg border border-gray-200">
+          <h3 class="text-sm font-semibold text-gray-900 mb-1">Classification Report</h3>
+          <p class="text-xs text-gray-500 mb-4">Precision, recall, and F1-score computed for each class.</p>
+
+          <table class="w-full text-sm border border-gray-200">
+            <thead>
+              <tr class="bg-gray-50 text-gray-600 text-xs border-b border-gray-200">
+                <th class="p-2 text-left font-medium">Class</th>
+                <th class="p-2 text-right font-medium">Precision</th>
+                <th class="p-2 text-right font-medium">Recall</th>
+                <th class="p-2 text-right font-medium">F1-Score</th>
+                <th class="p-2 text-right font-medium">Support</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 text-sm">
+              <tr>
+                <td class="p-2 text-left font-medium text-gray-800">Setosa</td>
+                <td class="p-2 text-right text-gray-700">1.0000</td>
+                <td class="p-2 text-right text-gray-700">1.0000</td>
+                <td class="p-2 text-right text-gray-700">1.0000</td>
+                <td class="p-2 text-right text-gray-500">11</td>
+              </tr>
+              <tr>
+                <td class="p-2 text-left font-medium text-gray-800">Versicolor</td>
+                <td class="p-2 text-right text-gray-700">1.0000</td>
+                <td class="p-2 text-right text-gray-700">0.9091</td>
+                <td class="p-2 text-right text-gray-700">0.9524</td>
+                <td class="p-2 text-right text-gray-500">11</td>
+              </tr>
+              <tr>
+                <td class="p-2 text-left font-medium text-gray-800">Virginica</td>
+                <td class="p-2 text-right text-gray-700">0.8889</td>
+                <td class="p-2 text-right text-gray-700">1.0000</td>
+                <td class="p-2 text-right text-gray-700">0.9412</td>
+                <td class="p-2 text-right text-gray-500">8</td>
+              </tr>
+              <tr class="bg-gray-50 font-medium text-gray-900 border-t border-gray-300">
+                <td class="p-2 text-left">Accuracy</td>
+                <td colspan="2" class="p-2 text-center text-xs text-gray-500">total test samples</td>
+                <td class="p-2 text-right">0.9667</td>
+                <td class="p-2 text-right">30</td>
+              </tr>
+              <tr class="text-gray-600 text-xs">
+                <td class="p-2 text-left font-medium">Macro Avg</td>
+                <td class="p-2 text-right">0.9630</td>
+                <td class="p-2 text-right">0.9697</td>
+                <td class="p-2 text-right">0.9645</td>
+                <td class="p-2 text-right">30</td>
+              </tr>
+              <tr class="text-gray-600 text-xs">
+                <td class="p-2 text-left font-medium">Weighted Avg</td>
+                <td class="p-2 text-right">0.9704</td>
+                <td class="p-2 text-right">0.9667</td>
+                <td class="p-2 text-right">0.9669</td>
+                <td class="p-2 text-right">30</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- TAB 2: CLASSIFY A SAMPLE -->
+    <section id="tab-predict" class="tab-pane hidden space-y-6">
+      
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+        
+        <!-- Input Form (7 cols) -->
+        <div class="md:col-span-7 bg-white p-5 rounded-lg border border-gray-200 space-y-4">
+          <div class="flex items-center justify-between border-b border-gray-200 pb-3">
+            <h2 class="text-sm font-semibold text-gray-900">Input Flower Measurements</h2>
+            <div class="flex items-center gap-1.5 text-xs text-gray-600">
+              <label for="k-val">Neighbors (k):</label>
+              <select id="k-val" onchange="predict()" class="border border-gray-300 rounded px-2 py-1 text-xs bg-white">
+                <option value="1">1</option>
+                <option value="3">3</option>
+                <option value="5" selected>5</option>
+                <option value="7">7</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Presets -->
+          <div class="flex items-center gap-2 text-xs">
+            <span class="text-gray-500">Presets:</span>
+            <button onclick="setSample(5.0, 3.5, 1.4, 0.2)" class="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 rounded text-gray-700 border border-gray-300">Setosa</button>
+            <button onclick="setSample(5.9, 3.0, 4.2, 1.5)" class="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 rounded text-gray-700 border border-gray-300">Versicolor</button>
+            <button onclick="setSample(6.5, 3.0, 5.5, 2.0)" class="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 rounded text-gray-700 border border-gray-300">Virginica</button>
+          </div>
+
+          <!-- Sliders -->
+          <div class="space-y-4 pt-2">
+            <div>
+              <div class="flex justify-between text-xs text-gray-700 mb-1">
+                <span>Sepal Length (cm)</span>
+                <span id="sl-val" class="font-semibold text-gray-900">5.8 cm</span>
+              </div>
+              <input type="range" id="sl-slider" min="4.0" max="8.0" step="0.1" value="5.8" oninput="predict()" class="w-full">
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs text-gray-700 mb-1">
+                <span>Sepal Width (cm)</span>
+                <span id="sw-val" class="font-semibold text-gray-900">3.0 cm</span>
+              </div>
+              <input type="range" id="sw-slider" min="2.0" max="4.5" step="0.1" value="3.0" oninput="predict()" class="w-full">
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs text-gray-700 mb-1">
+                <span>Petal Length (cm)</span>
+                <span id="pl-val" class="font-semibold text-gray-900">4.3 cm</span>
+              </div>
+              <input type="range" id="pl-slider" min="1.0" max="7.0" step="0.1" value="4.3" oninput="predict()" class="w-full">
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs text-gray-700 mb-1">
+                <span>Petal Width (cm)</span>
+                <span id="pw-val" class="font-semibold text-gray-900">1.3 cm</span>
+              </div>
+              <input type="range" id="pw-slider" min="0.1" max="2.5" step="0.1" value="1.3" oninput="predict()" class="w-full">
+            </div>
+          </div>
+        </div>
+
+        <!-- Result Box (5 cols) -->
+        <div class="md:col-span-5 bg-white p-5 rounded-lg border border-gray-200 space-y-4">
+          <h2 class="text-sm font-semibold text-gray-900 border-b border-gray-200 pb-3">Prediction Result</h2>
+
+          <div class="p-4 rounded border bg-gray-50 border-gray-200 text-center space-y-1">
+            <div class="text-xs text-gray-500 uppercase tracking-wide">Predicted Species</div>
+            <div id="pred-class" class="text-xl font-bold text-blue-700">Iris versicolor</div>
+            <p id="pred-note" class="text-xs text-gray-500 pt-1">Identified based on petal length and width.</p>
+          </div>
+
+          <!-- Class Probabilities -->
+          <div class="space-y-2 text-xs">
+            <span class="text-gray-600 font-medium">Confidence Breakdown:</span>
+            
+            <div>
+              <div class="flex justify-between text-gray-600 mb-0.5">
+                <span>Iris setosa</span>
+                <span id="prob-0">0.0%</span>
+              </div>
+              <div class="w-full bg-gray-200 h-2 rounded overflow-hidden">
+                <div id="bar-0" class="bg-gray-600 h-2" style="width: 0%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-gray-600 mb-0.5">
+                <span>Iris versicolor</span>
+                <span id="prob-1">92.0%</span>
+              </div>
+              <div class="w-full bg-gray-200 h-2 rounded overflow-hidden">
+                <div id="bar-1" class="bg-blue-600 h-2" style="width: 92%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-gray-600 mb-0.5">
+                <span>Iris virginica</span>
+                <span id="prob-2">8.0%</span>
+              </div>
+              <div class="w-full bg-gray-200 h-2 rounded overflow-hidden">
+                <div id="bar-2" class="bg-gray-600 h-2" style="width: 8%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Nearest Neighbors -->
+          <div class="border-t border-gray-200 pt-3">
+            <div class="text-xs text-gray-500 mb-1.5">Nearest Training Samples:</div>
+            <div id="neighbors-list" class="text-xs text-gray-600 space-y-1">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- TAB 3: DATASET -->
+    <section id="tab-dataset" class="tab-pane hidden space-y-4">
+      <div class="bg-white p-5 rounded-lg border border-gray-200 space-y-3">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <h2 class="text-sm font-semibold text-gray-900">Iris Dataset (150 Samples)</h2>
+            <p class="text-xs text-gray-500">50 samples per species, 4 measurements in centimeters</p>
+          </div>
+          <input type="text" id="search-input" placeholder="Filter table..." oninput="filterTable()" class="border border-gray-300 rounded px-2.5 py-1 text-xs w-48">
+        </div>
+
+        <div class="overflow-x-auto max-h-96 border border-gray-200 rounded">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-gray-50 border-b border-gray-200 sticky top-0 text-gray-600 font-medium">
+              <tr>
+                <th class="p-2.5">#</th>
+                <th class="p-2.5">Sepal Length</th>
+                <th class="p-2.5">Sepal Width</th>
+                <th class="p-2.5">Petal Length</th>
+                <th class="p-2.5">Petal Width</th>
+                <th class="p-2.5">Species</th>
+              </tr>
+            </thead>
+            <tbody id="table-body" class="divide-y divide-gray-100 font-mono">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: NOTES & FORMULAS -->
+    <section id="tab-about" class="tab-pane hidden space-y-6">
+      
+      <div class="bg-white p-5 rounded-lg border border-gray-200 space-y-4">
+        <h2 class="text-base font-semibold text-gray-900">Overview &amp; Evaluation Formulas</h2>
+        
+        <p class="text-sm text-gray-700 leading-relaxed">
+          The Iris dataset is a multiclass dataset containing 150 instances of three iris species (Setosa, Versicolor, and Virginica). 
+          The data was partitioned into an 80% training set (120 samples) and a 20% test set (30 samples) 
+          using a fixed random seed (42).
+        </p>
+
+        <div class="space-y-4 pt-2 text-sm">
+          
+          <div class="border-l-2 border-gray-300 pl-3">
+            <h3 class="font-semibold text-gray-900 text-xs uppercase tracking-wide">Accuracy</h3>
+            <p class="text-xs text-gray-600 mt-1">Accuracy = (Correct Predictions) / (Total Predictions)</p>
+            <p class="text-xs text-gray-500 mt-0.5">Overall fraction of test samples where the predicted class equals the true class.</p>
+          </div>
+
+          <div class="border-l-2 border-gray-300 pl-3">
+            <h3 class="font-semibold text-gray-900 text-xs uppercase tracking-wide">Precision</h3>
+            <p class="text-xs text-gray-600 mt-1">Precision = True Positives / (True Positives + False Positives)</p>
+            <p class="text-xs text-gray-500 mt-0.5">Measures what proportion of positive identifications was actually correct.</p>
+          </div>
+
+          <div class="border-l-2 border-gray-300 pl-3">
+            <h3 class="font-semibold text-gray-900 text-xs uppercase tracking-wide">Recall</h3>
+            <p class="text-xs text-gray-600 mt-1">Recall = True Positives / (True Positives + False Negatives)</p>
+            <p class="text-xs text-gray-500 mt-0.5">Measures what proportion of actual positive samples was identified correctly.</p>
+          </div>
+
+          <div class="border-l-2 border-gray-300 pl-3">
+            <h3 class="font-semibold text-gray-900 text-xs uppercase tracking-wide">F1-Score</h3>
+            <p class="text-xs text-gray-600 mt-1">F1 = 2 &times; (Precision &times; Recall) / (Precision + Recall)</p>
+            <p class="text-xs text-gray-500 mt-0.5">The harmonic mean of precision and recall, balancing false positives and false negatives.</p>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-gray-200 py-4 text-center text-xs text-gray-500">
+    Iris Flower Classification &bull; Model Evaluation &amp; Metrics
+  </footer>
+
+  <!-- Script -->
+  <script>
+    const DATA = [
+      [5.1, 3.5, 1.4, 0.2, 0], [4.9, 3.0, 1.4, 0.2, 0], [4.7, 3.2, 1.3, 0.2, 0], [4.6, 3.1, 1.5, 0.2, 0],
+      [5.0, 3.6, 1.4, 0.2, 0], [5.4, 3.9, 1.7, 0.4, 0], [4.6, 3.4, 1.4, 0.3, 0], [5.0, 3.4, 1.5, 0.2, 0],
+      [4.4, 2.9, 1.4, 0.2, 0], [4.9, 3.1, 1.5, 0.1, 0], [5.4, 3.7, 1.5, 0.2, 0], [4.8, 3.4, 1.6, 0.2, 0],
+      [4.8, 3.0, 1.4, 0.1, 0], [4.3, 3.0, 1.1, 0.1, 0], [5.8, 4.0, 1.2, 0.2, 0], [5.7, 4.4, 1.5, 0.4, 0],
+      [5.4, 3.9, 1.3, 0.4, 0], [5.1, 3.5, 1.4, 0.3, 0], [5.7, 3.8, 1.7, 0.3, 0], [5.1, 3.8, 1.5, 0.3, 0],
+      [5.4, 3.4, 1.7, 0.2, 0], [5.1, 3.7, 1.5, 0.4, 0], [4.6, 3.6, 1.0, 0.2, 0], [5.1, 3.3, 1.7, 0.5, 0],
+      [4.8, 3.4, 1.9, 0.2, 0], [5.0, 3.0, 1.6, 0.2, 0], [5.0, 3.4, 1.6, 0.4, 0], [5.2, 3.5, 1.5, 0.2, 0],
+      [5.2, 3.4, 1.4, 0.2, 0], [4.7, 3.2, 1.6, 0.2, 0], [4.8, 3.1, 1.6, 0.2, 0], [5.4, 3.4, 1.5, 0.4, 0],
+      [5.2, 4.1, 1.5, 0.1, 0], [5.5, 4.2, 1.4, 0.2, 0], [4.9, 3.1, 1.5, 0.2, 0], [5.0, 3.2, 1.2, 0.2, 0],
+      [5.5, 3.5, 1.3, 0.2, 0], [4.9, 3.6, 1.4, 0.1, 0], [4.4, 3.0, 1.3, 0.2, 0], [5.1, 3.4, 1.5, 0.2, 0],
+      [5.0, 3.5, 1.3, 0.3, 0], [4.5, 2.3, 1.3, 0.3, 0], [4.4, 3.2, 1.3, 0.2, 0], [5.0, 3.5, 1.6, 0.6, 0],
+      [5.1, 3.8, 1.9, 0.4, 0], [4.8, 3.0, 1.4, 0.3, 0], [5.1, 3.8, 1.6, 0.2, 0], [4.6, 3.2, 1.4, 0.2, 0],
+      [5.3, 3.7, 1.5, 0.2, 0], [5.0, 3.3, 1.4, 0.2, 0],
+      // Versicolor
+      [7.0, 3.2, 4.7, 1.4, 1], [6.4, 3.2, 4.5, 1.5, 1], [6.9, 3.1, 4.9, 1.5, 1], [5.5, 2.3, 4.0, 1.3, 1],
+      [6.5, 2.8, 4.6, 1.5, 1], [5.7, 2.8, 4.5, 1.3, 1], [6.3, 3.3, 4.7, 1.6, 1], [4.9, 2.4, 3.3, 1.0, 1],
+      [6.6, 2.9, 4.6, 1.3, 1], [5.2, 2.7, 3.9, 1.4, 1], [5.0, 2.0, 3.5, 1.0, 1], [5.9, 3.0, 4.2, 1.5, 1],
+      [6.0, 2.2, 4.0, 1.0, 1], [6.1, 2.9, 4.7, 1.4, 1], [5.6, 2.9, 3.6, 1.3, 1], [6.7, 3.1, 4.4, 1.4, 1],
+      [5.6, 3.0, 4.5, 1.5, 1], [5.8, 2.7, 4.1, 1.0, 1], [6.2, 2.2, 4.5, 1.5, 1], [5.6, 2.5, 3.9, 1.1, 1],
+      [5.9, 3.2, 4.8, 1.8, 1], [6.1, 2.8, 4.0, 1.3, 1], [6.3, 2.5, 4.9, 1.5, 1], [6.1, 2.8, 4.7, 1.2, 1],
+      [6.4, 2.9, 4.3, 1.3, 1], [6.6, 3.0, 4.4, 1.4, 1], [6.8, 2.8, 4.8, 1.4, 1], [6.7, 3.0, 5.0, 1.7, 1],
+      [6.0, 2.9, 4.5, 1.5, 1], [5.7, 2.6, 3.5, 1.0, 1], [5.5, 2.4, 3.8, 1.1, 1], [5.5, 2.4, 3.7, 1.0, 1],
+      [5.8, 2.7, 3.9, 1.2, 1], [6.0, 2.7, 5.1, 1.6, 1], [5.4, 3.0, 4.5, 1.5, 1], [6.0, 3.4, 4.5, 1.6, 1],
+      [6.7, 3.1, 4.7, 1.5, 1], [6.3, 2.3, 4.4, 1.3, 1], [5.6, 3.0, 4.1, 1.3, 1], [5.5, 2.5, 4.0, 1.3, 1],
+      [5.5, 2.6, 4.4, 1.2, 1], [6.1, 3.0, 4.6, 1.4, 1], [5.8, 2.6, 4.0, 1.2, 1], [5.0, 2.3, 3.3, 1.0, 1],
+      [5.6, 2.7, 4.2, 1.3, 1], [5.7, 3.0, 4.2, 1.2, 1], [5.7, 2.9, 4.2, 1.3, 1], [6.2, 2.9, 4.3, 1.3, 1],
+      [5.1, 2.5, 3.0, 1.1, 1], [5.7, 2.8, 4.1, 1.3, 1],
+      // Virginica
+      [6.3, 3.3, 6.0, 2.5, 2], [5.8, 2.7, 5.1, 1.9, 2], [7.1, 3.0, 5.9, 2.1, 2], [6.3, 2.9, 5.6, 1.8, 2],
+      [6.5, 3.0, 5.8, 2.2, 2], [7.6, 3.0, 6.6, 2.1, 2], [4.9, 2.5, 4.5, 1.7, 2], [7.3, 2.9, 6.3, 1.8, 2],
+      [6.7, 2.5, 5.8, 1.8, 2], [7.2, 3.6, 6.1, 2.5, 2], [6.5, 3.2, 5.1, 2.0, 2], [6.4, 2.7, 5.3, 1.9, 2],
+      [6.8, 3.0, 5.5, 2.1, 2], [5.7, 2.5, 5.0, 2.0, 2], [5.8, 2.8, 5.1, 2.4, 2], [6.4, 3.2, 5.3, 2.3, 2],
+      [6.5, 3.0, 5.5, 1.8, 2], [7.7, 3.8, 6.7, 2.2, 2], [7.7, 2.6, 6.9, 2.3, 2], [6.0, 2.2, 5.0, 1.5, 2],
+      [6.9, 3.2, 5.7, 2.3, 2], [5.6, 2.8, 4.9, 2.0, 2], [7.7, 2.8, 6.7, 2.0, 2], [6.3, 2.7, 4.9, 1.8, 2],
+      [6.7, 3.3, 5.7, 2.1, 2], [7.2, 3.2, 6.0, 1.8, 2], [6.2, 2.8, 4.8, 1.8, 2], [6.1, 3.0, 4.9, 1.8, 2],
+      [6.4, 2.8, 5.6, 2.1, 2], [7.2, 3.0, 5.8, 1.6, 2], [7.4, 2.8, 6.1, 1.9, 2], [7.9, 3.8, 6.4, 2.0, 2],
+      [6.4, 2.8, 5.6, 2.2, 2], [6.3, 2.8, 5.1, 1.5, 2], [6.1, 2.6, 5.6, 1.4, 2], [7.7, 3.0, 6.1, 2.3, 2],
+      [6.3, 3.4, 5.6, 2.4, 2], [6.4, 3.1, 5.5, 1.8, 2], [6.0, 3.0, 4.8, 1.8, 2], [6.9, 3.1, 5.4, 2.1, 2],
+      [6.7, 3.1, 5.6, 2.4, 2], [6.9, 3.1, 5.1, 2.3, 2], [5.8, 2.7, 5.1, 1.9, 2], [6.8, 3.2, 5.9, 2.3, 2],
+      [6.7, 3.3, 5.7, 2.5, 2], [6.7, 3.0, 5.2, 2.3, 2], [6.3, 2.5, 5.0, 1.9, 2], [6.5, 3.0, 5.2, 2.0, 2],
+      [6.2, 3.4, 5.4, 2.3, 2], [5.9, 3.0, 5.1, 1.8, 2]
+    ];
+
+    const CLASSES = ['Iris setosa', 'Iris versicolor', 'Iris virginica'];
+
+    function switchTab(id) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('border-blue-600', 'text-blue-600');
+        btn.classList.add('border-transparent', 'text-gray-500');
+      });
+
+      document.getElementById(`tab-${id}`).classList.remove('hidden');
+      const active = document.getElementById(`tab-btn-${id}`);
+      active.classList.remove('border-transparent', 'text-gray-500');
+      active.classList.add('border-blue-600', 'text-blue-600');
+    }
+
+    function setSample(sl, sw, pl, pw) {
+      document.getElementById('sl-slider').value = sl;
+      document.getElementById('sw-slider').value = sw;
+      document.getElementById('pl-slider').value = pl;
+      document.getElementById('pw-slider').value = pw;
+      predict();
+    }
+
+    function dist(a, b) {
+      return Math.sqrt(
+        (a[0]-b[0])**2 + (a[1]-b[1])**2 + (a[2]-b[2])**2 + (a[3]-b[3])**2
+      );
+    }
+
+    function predict() {
+      const sl = parseFloat(document.getElementById('sl-slider').value);
+      const sw = parseFloat(document.getElementById('sw-slider').value);
+      const pl = parseFloat(document.getElementById('pl-slider').value);
+      const pw = parseFloat(document.getElementById('pw-slider').value);
+      const k = parseInt(document.getElementById('k-val').value);
+
+      document.getElementById('sl-val').innerText = `${sl.toFixed(1)} cm`;
+      document.getElementById('sw-val').innerText = `${sw.toFixed(1)} cm`;
+      document.getElementById('pl-val').innerText = `${pl.toFixed(1)} cm`;
+      document.getElementById('pw-val').innerText = `${pw.toFixed(1)} cm`;
+
+      const q = [sl, sw, pl, pw];
+      const list = DATA.map(r => ({
+        d: dist(q, r.slice(0, 4)),
+        label: r[4]
+      }));
+
+      list.sort((a, b) => a.d - b.d);
+      const topK = list.slice(0, k);
+
+      const weights = topK.map(x => 1.0 / (x.d + 1e-5));
+      const totalW = weights.reduce((s, w) => s + w, 0);
+
+      const probs = [0, 0, 0];
+      topK.forEach((item, i) => {
+        probs[item.label] += weights[i] / totalW;
+      });
+
+      const votes = [0, 0, 0];
+      topK.forEach(x => votes[x.label]++);
+      let best = 0;
+      if (votes[1] > votes[best]) best = 1;
+      if (votes[2] > votes[best]) best = 2;
+
+      document.getElementById('pred-class').innerText = CLASSES[best];
+      
+      const p0 = (probs[0] * 100).toFixed(1);
+      const p1 = (probs[1] * 100).toFixed(1);
+      const p2 = (probs[2] * 100).toFixed(1);
+
+      document.getElementById('prob-0').innerText = `${p0}%`;
+      document.getElementById('bar-0').style.width = `${p0}%`;
+      document.getElementById('prob-1').innerText = `${p1}%`;
+      document.getElementById('bar-1').style.width = `${p1}%`;
+      document.getElementById('prob-2').innerText = `${p2}%`;
+      document.getElementById('bar-2').style.width = `${p2}%`;
+
+      const notes = [
+        'Short petal length and width typically correspond to Setosa.',
+        'Moderate petal length and width typically correspond to Versicolor.',
+        'Longer and wider petals typically correspond to Virginica.'
+      ];
+      document.getElementById('pred-note').innerText = notes[best];
+
+      const nList = document.getElementById('neighbors-list');
+      nList.innerHTML = topK.map(n => `
+        <div class="flex justify-between py-0.5 border-b border-gray-100 last:border-0">
+          <span>${CLASSES[n.label]}</span>
+          <span class="font-mono text-gray-500">distance = ${n.d.toFixed(2)}</span>
+        </div>
+      `).join('');
+    }
+
+    function populateTable() {
+      const tb = document.getElementById('table-body');
+      const species = ['setosa', 'versicolor', 'virginica'];
+      tb.innerHTML = DATA.map((row, idx) => `
+        <tr class="hover:bg-gray-50">
+          <td class="p-2.5 text-gray-400">${idx + 1}</td>
+          <td class="p-2.5 text-gray-700">${row[0].toFixed(1)}</td>
+          <td class="p-2.5 text-gray-700">${row[1].toFixed(1)}</td>
+          <td class="p-2.5 text-gray-700">${row[2].toFixed(1)}</td>
+          <td class="p-2.5 text-gray-700">${row[3].toFixed(1)}</td>
+          <td class="p-2.5 text-gray-900 font-medium">${species[row[4]]}</td>
+        </tr>
+      `).join('');
+    }
+
+    function filterTable() {
+      const q = document.getElementById('search-input').value.toLowerCase();
+      const rows = document.querySelectorAll('#table-body tr');
+      rows.forEach(r => {
+        r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none';
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      populateTable();
+      predict();
+    });
+  </script>
+</body>
+</html>
