@@ -207,7 +207,7 @@
             <h2 class="text-sm font-semibold text-gray-900">Input Flower Measurements</h2>
             <div class="flex items-center gap-1.5 text-xs text-gray-600">
               <label for="k-val">Neighbors (k):</label>
-              <select id="k-val" onchange="predict()" class="border border-gray-300 rounded px-2 py-1 text-xs bg-white">
+              <select id="k-val" class="border border-gray-300 rounded px-2 py-1 text-xs bg-white">
                 <option value="1">1</option>
                 <option value="3">3</option>
                 <option value="5" selected>5</option>
@@ -231,7 +231,7 @@
                 <span>Sepal Length (cm)</span>
                 <span id="sl-val" class="font-semibold text-gray-900">5.8 cm</span>
               </div>
-              <input type="range" id="sl-slider" min="4.0" max="8.0" step="0.1" value="5.8" oninput="predict()" class="w-full">
+              <input type="range" id="sl-slider" min="4.0" max="8.0" step="0.1" value="5.8" oninput="updateSliderDisplay()" class="w-full">
             </div>
 
             <div>
@@ -239,7 +239,7 @@
                 <span>Sepal Width (cm)</span>
                 <span id="sw-val" class="font-semibold text-gray-900">3.0 cm</span>
               </div>
-              <input type="range" id="sw-slider" min="2.0" max="4.5" step="0.1" value="3.0" oninput="predict()" class="w-full">
+              <input type="range" id="sw-slider" min="2.0" max="4.5" step="0.1" value="3.0" oninput="updateSliderDisplay()" class="w-full">
             </div>
 
             <div>
@@ -247,7 +247,7 @@
                 <span>Petal Length (cm)</span>
                 <span id="pl-val" class="font-semibold text-gray-900">4.3 cm</span>
               </div>
-              <input type="range" id="pl-slider" min="1.0" max="7.0" step="0.1" value="4.3" oninput="predict()" class="w-full">
+              <input type="range" id="pl-slider" min="1.0" max="7.0" step="0.1" value="4.3" oninput="updateSliderDisplay()" class="w-full">
             </div>
 
             <div>
@@ -255,8 +255,15 @@
                 <span>Petal Width (cm)</span>
                 <span id="pw-val" class="font-semibold text-gray-900">1.3 cm</span>
               </div>
-              <input type="range" id="pw-slider" min="0.1" max="2.5" step="0.1" value="1.3" oninput="predict()" class="w-full">
+              <input type="range" id="pw-slider" min="0.1" max="2.5" step="0.1" value="1.3" oninput="updateSliderDisplay()" class="w-full">
             </div>
+          </div>
+
+          <!-- Predict Button -->
+          <div class="pt-2">
+            <button onclick="predict()" class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm rounded shadow-sm transition">
+              Predict Species
+            </button>
           </div>
         </div>
 
@@ -266,8 +273,8 @@
 
           <div class="p-4 rounded border bg-gray-50 border-gray-200 text-center space-y-1">
             <div class="text-xs text-gray-500 uppercase tracking-wide">Predicted Species</div>
-            <div id="pred-class" class="text-xl font-bold text-blue-700">Iris versicolor</div>
-            <p id="pred-note" class="text-xs text-gray-500 pt-1">Identified based on petal length and width.</p>
+            <div id="pred-class" class="text-xl font-bold text-gray-400">—</div>
+            <p id="pred-note" class="text-xs text-gray-500 pt-1">Adjust measurements and click "Predict Species".</p>
           </div>
 
           <!-- Class Probabilities -->
@@ -280,27 +287,27 @@
                 <span id="prob-0">0.0%</span>
               </div>
               <div class="w-full bg-gray-200 h-2 rounded overflow-hidden">
-                <div id="bar-0" class="bg-gray-600 h-2" style="width: 0%"></div>
+                <div id="bar-0" class="bg-blue-600 h-2 transition-all duration-300" style="width: 0%"></div>
               </div>
             </div>
 
             <div>
               <div class="flex justify-between text-gray-600 mb-0.5">
                 <span>Iris versicolor</span>
-                <span id="prob-1">92.0%</span>
+                <span id="prob-1">0.0%</span>
               </div>
               <div class="w-full bg-gray-200 h-2 rounded overflow-hidden">
-                <div id="bar-1" class="bg-blue-600 h-2" style="width: 92%"></div>
+                <div id="bar-1" class="bg-blue-600 h-2 transition-all duration-300" style="width: 0%"></div>
               </div>
             </div>
 
             <div>
               <div class="flex justify-between text-gray-600 mb-0.5">
                 <span>Iris virginica</span>
-                <span id="prob-2">8.0%</span>
+                <span id="prob-2">0.0%</span>
               </div>
               <div class="w-full bg-gray-200 h-2 rounded overflow-hidden">
-                <div id="bar-2" class="bg-gray-600 h-2" style="width: 8%"></div>
+                <div id="bar-2" class="bg-blue-600 h-2 transition-all duration-300" style="width: 0%"></div>
               </div>
             </div>
           </div>
@@ -308,8 +315,8 @@
           <!-- Nearest Neighbors -->
           <div class="border-t border-gray-200 pt-3">
             <div class="text-xs text-gray-500 mb-1.5">Nearest Training Samples:</div>
-            <div id="neighbors-list" class="text-xs text-gray-600 space-y-1">
-              <!-- Populated by JS -->
+            <div id="neighbors-list" class="text-xs text-gray-400 italic">
+              Click "Predict Species" to see nearest samples.
             </div>
           </div>
         </div>
@@ -321,12 +328,17 @@
     <!-- TAB 3: DATASET -->
     <section id="tab-dataset" class="tab-pane hidden space-y-4">
       <div class="bg-white p-5 rounded-lg border border-gray-200 space-y-3">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h2 class="text-sm font-semibold text-gray-900">Iris Dataset (150 Samples)</h2>
             <p class="text-xs text-gray-500">50 samples per species, 4 measurements in centimeters</p>
           </div>
-          <input type="text" id="search-input" placeholder="Filter table..." oninput="filterTable()" class="border border-gray-300 rounded px-2.5 py-1 text-xs w-48">
+          <div class="flex items-center gap-2">
+            <button onclick="downloadCSV()" class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium rounded border border-gray-300 transition">
+              Download CSV
+            </button>
+            <input type="text" id="search-input" placeholder="Filter table..." oninput="filterTable()" class="border border-gray-300 rounded px-2.5 py-1 text-xs w-40">
+          </div>
         </div>
 
         <div class="overflow-x-auto max-h-96 border border-gray-200 rounded">
@@ -460,12 +472,19 @@
       active.classList.add('border-blue-600', 'text-blue-600');
     }
 
+    function updateSliderDisplay() {
+      document.getElementById('sl-val').innerText = parseFloat(document.getElementById('sl-slider').value).toFixed(1) + ' cm';
+      document.getElementById('sw-val').innerText = parseFloat(document.getElementById('sw-slider').value).toFixed(1) + ' cm';
+      document.getElementById('pl-val').innerText = parseFloat(document.getElementById('pl-slider').value).toFixed(1) + ' cm';
+      document.getElementById('pw-val').innerText = parseFloat(document.getElementById('pw-slider').value).toFixed(1) + ' cm';
+    }
+
     function setSample(sl, sw, pl, pw) {
       document.getElementById('sl-slider').value = sl;
       document.getElementById('sw-slider').value = sw;
       document.getElementById('pl-slider').value = pl;
       document.getElementById('pw-slider').value = pw;
-      predict();
+      updateSliderDisplay();
     }
 
     function dist(a, b) {
@@ -538,6 +557,19 @@
       `).join('');
     }
 
+    function downloadCSV() {
+      const species = ['setosa', 'versicolor', 'virginica'];
+      const headers = 'sepal_length,sepal_width,petal_length,petal_width,species\n';
+      const rows = DATA.map(r => `${r[0]},${r[1]},${r[2]},${r[3]},${species[r[4]]}`).join('\n');
+      const blob = new Blob([headers + rows], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'iris_dataset.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
     function populateTable() {
       const tb = document.getElementById('table-body');
       const species = ['setosa', 'versicolor', 'virginica'];
@@ -563,7 +595,6 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       populateTable();
-      predict();
     });
   </script>
 </body>
