@@ -80,7 +80,7 @@ Double-click `index.html` or open it directly in Chrome, Edge, or Firefox.
 ### Method 2: With Python Server
 Run the lightweight server included in the project:
 ```bash
-python server.py
+python local_server.py
 ```
 Then navigate to:
 ```
@@ -102,7 +102,7 @@ http://localhost:8000
 ```
 iris-classification/
 ├── index.html                  # Web application (dashboard & interactive classifier)
-├── server.py                   # Python HTTP backend server with REST API
+├── local_server.py             # Python HTTP backend server for local testing
 ├── iris_classifier_sklearn.py  # scikit-learn training & metrics script
 ├── iris_classifier_pure.py     # Standalone Python classifier & metrics script
 ├── requirements.txt            # Python dependencies
