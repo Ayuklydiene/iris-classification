@@ -4,7 +4,7 @@ A web application and machine learning benchmark for classifying Iris flower spe
 
 ---
 
-## 📌 Project Overview
+## Project Overview
 
 This project implements a classification model using the Iris dataset (150 samples across 3 species: *Setosa*, *Versicolor*, and *Virginica*). 
 
@@ -12,7 +12,7 @@ The dataset is partitioned into an **80% training set (120 samples)** and a **20
 
 ---
 
-## 📊 Evaluation Metrics Benchmark
+## Evaluation Metrics Benchmark
 
 ### Overall Model Performance
 
@@ -52,7 +52,7 @@ Virginica            0           0           8
 
 ---
 
-## 💻 Web Application Features
+##  Web Application Features
 
 1. **Evaluation Metrics**:
    * Summary cards showing Overall Accuracy, Macro Precision, Macro Recall, and Macro F1-Score.
@@ -72,7 +72,7 @@ Virginica            0           0           8
 
 ---
 
-## 🚀 How to Run Locally
+##  How to Run Locally
 
 ### Method 1: Direct in Browser (No Setup Required)
 Double-click `index.html` or open it directly in Chrome, Edge, or Firefox.
@@ -89,7 +89,7 @@ http://localhost:8000
 
 ---
 
-## 🌐 Deploy to Vercel
+##  Deploy to Vercel
 
 1. Push this repository to GitHub.
 2. Go to [vercel.com](https://vercel.com) and import the repository.
@@ -97,7 +97,7 @@ http://localhost:8000
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 iris-classification/
